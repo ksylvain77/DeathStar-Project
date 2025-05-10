@@ -17,3 +17,20 @@ services:
       - 6881:6881       # Torrent TCP
       - 6881:6881/udp   # Torrent UDP
     restart: unless-stopped
+
+  web-portal:
+    image: node:18-alpine
+    container_name: web-portal
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    volumes:
+      - ./web-portal:/app
+      - /volume1/data/configs/web-portal:/app/config
+    ports:
+      - 3000:3000
+    working_dir: /app
+    command: sh -c "npm install && npm start"
+    restart: unless-stopped
+    depends_on:
+      - qbittorrent
